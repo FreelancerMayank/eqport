@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Data Table</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+    <div class="flex mx-40 my-20">
+    <h1 class="text-4xl font-bold text-gray-800 mr-80">Markets Today</h1>
+    <p class="text-gray-800 ml-50 mx-10 my-5"><a href="/">HG</a></p>
+    <p class="text-gray-800 my-5"><a href="/kg">KG</a></p>
+    <p class="text-gray-800 mx-10 my-5"><a href="/mg">MG</a></p>
+    <p class="text-gray-800 my-5"><a href="/rg">RG</a></p>
+    <p class="text-gray-800 mx-10 my-5"><a href="/ag">AG</a></p>
+    <p class="text-gray-800 my-5">Acc 6</p>
+    <p class="text-gray-800 mx-10 my-5">Acc 7</p>
+    <p class="text-gray-800 my-5"><a href="/all">All</a></p></div>
+    
+                <div id="data-container" class="data-container grid grid-cols-6 gap-6 mx-40 mt-[-3%]">
+                    <!-- dynamic divs will be updated here -->
+                </div>
+    
+    
+
+  <div class="max-w-7xl mx-auto mt-8 px-4 py-8 bg-zinc-800 shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold mb-4 text-center text-zinc-900"><%= alias%> Portfolio</h2>
+    <div class="overflow-x-auto">
+      <table id="example" class="min-w-full bg-gray-800 border border-gray-700 rounded-lg">
+        
+        <thead>
+          <tr class="bg-gray-700 border-b border-gray-600">
+            <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">tradingsymbol</th>
+            <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">totalQty</th>
+            <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">averagePrice</th>
+            <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">closePrice</th>
+            <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">plpercent</th>
+          </tr>
+        </thead>
+
+        <tbody id="data-table-body">
+            <tr class="border-b border-gray-600 hover:bg-gray-200">
+                <!-- dynamic rows -->
+            </tr>
+            
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+
+<!-- dynamic script -->
+<script>
+    //to fetch the dynamic values of placeholder
+    async function fetchPlaces() {
+      try {
+        const response = await fetch('/api/places');
+        const places = await response.json();
+        updateDivs(places);//
+      } catch (error) {
+        console.error('Error fetching places:', error);
+      }
+    }
+
+    function updateDivs(places) {
+      const dataContainer = document.getElementById('data-container');
+      dataContainer.innerHTML = ''; // Clear existing divs
+
+      places.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'data-item text-white bg-gray-700 h-28 rounded-lg p-4';
+        div.innerHTML = `
+          <h3 class="text-sm text-white mr-40">${item.name}</h3>
+          <h1 class="text-2xl font-semibold">${item.value}</h1>
+          <h4 class="text-sm text-white">${item.pchg}</h4>
+          `;
+          
+        dataContainer.appendChild(div);
+      });
+    }
+
+    // Fetch data every second
+    setInterval(fetchPlaces, 1000);
+
+    // Initial fetch
+    fetchPlaces();
+
+
+    //for dynamic values of portfolio:
+
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/data/hg');
+        const data = await response.json();
+        updateTable(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    function updateTable(data) {
+      const tableBody = document.getElementById('data-table-body');
+      tableBody.innerHTML = ''; // Clear existing table rows
+
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="py-3 px-4 text-sm text-gray-900">${item.tradingsymbol}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.totalQty}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.averagePrice}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.closePrice}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.plpercent}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Fetch data every second
+    setInterval(fetchData, 1000);
+
+    // Initial fetch
+    fetchData();
+
+    $(document).ready(function() {
+        $('#example').DataTable({
+            
+        });
+    });
+  </script>
+
+
+
+</body>
+</html>
