@@ -114,9 +114,9 @@
         row.innerHTML = `
           <td class="py-3 px-4 text-sm text-gray-900">${item.tradingsymbol}</td>
           <td class="py-3 px-4 text-sm text-gray-900">${item.totalQty}</td>
-          <td class="py-3 px-4 text-sm text-gray-900">${item.averagePrice}</td>
-          <td class="py-3 px-4 text-sm text-gray-900">${item.closePrice}</td>
-          <td class="py-3 px-4 text-sm text-gray-900">${item.plpercent}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.averagePrice.toFixed(2)}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.closePrice.toFixed(2)}</td>
+          <td class="py-3 px-4 text-sm text-gray-900">${item.plpercent.toFixed(2)}</td>
         `;
         tableBody.appendChild(row);
       });
