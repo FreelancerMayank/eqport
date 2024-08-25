@@ -7,8 +7,13 @@ const portfolioSchema = mongoose.Schema({
     tradingsymbol: String,
     totalQty:Number,
     averagePrice: Number,
+    investedamount: Number,
     closePrice: Number,
-    plpercent: Number
+    plpercent: Number,
+    uniqueid:String,
+    pnl:Number,
+    currentamount: Number,
+    pchg: Number
 })
 
 module.exports = mongoose.model("portfolio",portfolioSchema);

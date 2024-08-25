@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Viewer</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+<div class="flex mx-40 float-right">
+    <a class="w-14 bg-zinc-900 text-white h-8 my-4 text-center rounded-sm m-2 p-1" href="/">Home</a>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 py-8 bg-zinc-800 shadow-lg rounded-lg">
+    <h1 class="text-2xl font-bold mb-4 text-center text-xinc-900">Scrips</h1>
+    <div class="overflow-x-auto">
+        <table id="example" class="min-w-full bg-gray-800 border border-gray-700 rounded-lg">
+            <thead>
+                <tr class="bg-gray-700 border-b border-gray-600">
+                    <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">Trading Symbol</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">Total Quantity</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">Average Price</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">Invested Amount</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm text-gray-200">Weightage</th>
+                </tr>
+            </thead>
+            <tbody id="data-table-body">
+                <!-- dynamic rows -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+<script>
+    // Fetch and update table data
+    async function fetchData() {
+        try {
+            const response = await fetch('/api/data/scrips');
+            const data = await response.json();
+            updateTable(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    function updateTable(data) {
+        const tableBody = document.getElementById('data-table-body');
+        tableBody.innerHTML = ''; // Clear existing table rows
+
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="py-3 px-4 text-sm text-gray-900">${item.tradingsymbol}</td>
+                <td class="py-3 px-4 text-sm text-gray-900">${item.totalQty}</td>
+                <td class="py-3 px-4 text-sm text-gray-900">${item.averagePrice.toFixed(2)}</td>
+                <td class="py-3 px-4 text-sm text-gray-900">${item.investedamount.toFixed(2)}</td>
+                <td class="py-3 px-4 text-sm text-gray-900">${item.weigtage.toFixed(2)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Fetch data every second
+    setInterval(fetchData, 1000);
+
+    // Initial fetch
+    fetchData();
+
+    $(document).ready(function() {
+        $('#example').DataTable();
+    });
+</script>
+
+</body>
+</html>

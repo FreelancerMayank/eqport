@@ -12,7 +12,9 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 const placeholderSchema = mongoose.Schema({
     name:String,
     value:Number,
-    pchg:Number 
+    pchg:Number,
+    down_stocks:Number,
+    up_stocks:Number
   })
 
 module.exports = mongoose.model("placeholder",placeholderSchema);
