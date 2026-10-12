@@ -360,7 +360,7 @@ class PortfolioService {
     return {
       success: true,
       timestamp: new Date().toISOString(),
-      serverTime: new Date().toLocaleTimeString('en-IN', { hour12: false }),
+      serverTime: new Date().toLocaleTimeString('en-IN', {timeZone: 'Asia/Kolkata', hour12: false}),
       dbStatus: databaseService.getStatus(),
       activeExchange: this.normalizeExchangeFilter(exchangeParam),
       activeFilter: this.normalizeAccountFilter(accountParam),
