@@ -1,25 +1,28 @@
 {
-  "name": "papa-ka-kaam",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "eqport-dashboard-v2",
+  "version": "2.0.0",
+  "description": "Dynamic Portfolio Dashboard with Real-Time, Flicker-Free Updates",
+  "main": "server.js",
   "scripts": {
-    "tailwind:css": "postcss public/styles/tailwind.css -o public/styles/styles.css"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node tests/calculation.test.js",
+    "test:all": "node tests/calculation.test.js && node tests/integration.test.js"
   },
-  "keywords": [],
+  "keywords": [
+    "portfolio",
+    "dashboard",
+    "equities",
+    "real-time",
+    "mongodb",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^10.4.19",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "mongoose": "^8.5.1",
-    "postcss": "^8.4.40",
-    "postcss-cli": "^11.0.0",
-    "socket.io": "^4.7.5"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.4.7"
+    "mongoose": "^8.5.1"
   }
 }

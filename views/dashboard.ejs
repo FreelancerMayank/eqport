@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'EQPORT — Dynamic Portfolio Dashboard' %></title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- 1. Header Section -->
+    <header class="dashboard-header">
+      <div class="brand-section">
+        <h1 class="brand-title">
+          <span>EQPORT</span>
+          <span class="brand-badge">v2.0</span>
+        </h1>
+        <span class="markets-heading">Markets Today</span>
+      </div>
+
+      <div class="header-status-section">
+        <div class="status-pill" id="connection-status-pill">
+          <span class="status-dot live" id="status-dot"></span>
+          <span id="status-text">Connecting...</span>
+        </div>
+        <span class="last-refreshed" id="last-refreshed">Refreshed: --:--:--</span>
+        <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Theme">
+          <span>🌙</span> <span>Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. Market Summary Cards Grid -->
+    <section class="market-cards-container" id="market-cards-container" aria-label="Market Summary Cards">
+      <!-- Dynamic cards rendered and updated in-place via dashboard.js -->
+    </section>
+
+    <!-- 3. Portfolio Summary Bar — Single Horizontal Line -->
+    <section class="portfolio-summary-bar" aria-label="Portfolio Summary">
+      <div class="summary-metrics-group">
+        <div class="summary-metric">
+          <span class="summary-label">Total Investment:</span>
+          <span class="summary-value" id="summary-invested">₹0.00</span>
+        </div>
+        <span class="summary-separator">|</span>
+        <div class="summary-metric">
+          <span class="summary-label">Current Value:</span>
+          <span class="summary-value" id="summary-current">₹0.00</span>
+        </div>
+        <span class="summary-separator">|</span>
+        <div class="summary-metric">
+          <span class="summary-label">Total PnL:</span>
+          <span class="summary-value summary-pnl-val" id="summary-pnl">₹0.00 (+0.00%)</span>
+        </div>
+      </div>
+
+      <div class="summary-stat-chips">
+        <span class="stat-chip" id="stat-scrips">Holdings: 0</span>
+        <span class="stat-chip text-positive" id="stat-green">Gainers: 0</span>
+        <span class="stat-chip text-negative" id="stat-red">Losers: 0</span>
+      </div>
+    </section>
+
+    <!-- 4. Table Controls Bar -->
+    <div class="table-controls-bar">
+      <!-- Filter Controls: Exchange Filter -> Account Filter -->
+      <div class="filter-controls-group">
+        <!-- Dynamic Exchange Filter Buttons -->
+        <div class="filter-group-container">
+          <span class="filter-group-label">Exchange:</span>
+          <div class="exchange-filters-group" id="exchange-filters" role="group" aria-label="Exchange Filter">
+            <button type="button" class="filter-btn active" data-exchange="all">All Exchanges</button>
+          </div>
+        </div>
+
+        <div class="filter-group-separator" aria-hidden="true"></div>
+
+        <!-- Dynamic Account Filter Buttons -->
+        <div class="filter-group-container">
+          <span class="filter-group-label">Account:</span>
+          <div class="account-filters-group" id="account-filters" role="group" aria-label="Account Filter">
+            <button type="button" class="filter-btn active" data-account="all">All Accounts</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Page Size Group -->
+      <div class="search-pagination-group">
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            class="search-input" 
+            id="search-input" 
+            placeholder="Search symbol or account..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="button" class="search-clear-btn" id="search-clear-btn" aria-label="Clear search">&times;</button>
+        </div>
+
+        <div class="page-size-selector">
+          <label for="page-size-select">Show:</label>
+          <select id="page-size-select" class="page-size-select">
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Single Consolidated Holdings Table Card -->
+    <main class="table-card">
+      <div class="table-responsive-wrapper">
+        <table class="holdings-table" id="holdings-table">
+          <thead>
+            <tr>
+              <th class="sortable" data-sort="alias" style="width: 120px;">
+                Account <span class="sort-icon"></span>
+              </th>
+              <th class="sortable" data-sort="tradingsymbol" style="min-width: 250px;">
+                Trading Symbol <span class="sort-icon"></span>
+              </th>
+              <th class="sortable align-right" data-sort="totalQty" style="width: 130px;">
+                Total Qty <span class="sort-icon"></span>
+              </th>
+              <th class="sortable align-right" data-sort="averagePrice" style="width: 140px;">
+                Bought Price <span class="sort-icon"></span>
+              </th>
+              <th class="sortable align-right" data-sort="closePrice" style="width: 140px;">
+                CMP <span class="sort-icon"></span>
+              </th>
+              <th class="sortable align-right" data-sort="plpercent" style="width: 140px;">
+                PnL (%) <span class="sort-icon"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="holdings-table-body">
+            <!-- Dynamic rows reconciled in-place via dashboard.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Footer with Entries Info and Pagination Controls -->
+      <footer class="table-footer">
+        <div class="entries-info" id="entries-info">
+          Showing 0 to 0 of 0 entries
+        </div>
+        <nav class="pagination-controls" id="pagination-controls" aria-label="Table Pagination">
+          <!-- Page buttons inserted dynamically -->
+        </nav>
+      </footer>
+    </main>
+
+  </div>
+
+  <!-- Runtime Configuration -->
+  <script>
+    window.EQPORT_CONFIG = {
+      refreshInterval: Number('<%= refreshInterval || 1000 %>')
+    };
+  </script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
